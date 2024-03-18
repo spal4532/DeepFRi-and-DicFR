@@ -1,0 +1,19 @@
+name: ml-env
+channels:
+- conda-forge
+- defaults
+dependencies:
+- python ==3.10.8
+- ipykernel
+- numpy
+- matplotlib
+- distributed
+- jupyterlab
+- jupyter-server-proxy
+- pandas
+- scikit-learn 
+- scipy
+- pip:
+        - tensorflow-macos
+        - tensorflow-metal
+        - keras
