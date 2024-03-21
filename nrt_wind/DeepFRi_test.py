@@ -53,7 +53,7 @@ def cnn_model_fit_60_30(imgPath,f):
 
     keras.backend.clear_session()
 
-    savedModel = "teresa_fr_1mres_60mdetrend_nfr_1mres_30mdetrend.h5"
+    savedModel = "fr_1mres_60mdetrend_nfr_1mres_30mdetrend.h5"
     model = get_model1()
     model.load_weights(savedModel)
     # model.summary()
