@@ -79,7 +79,7 @@ def create_hodogram(st,et,c,file):
 
 def DiFR(imgPath,list2,finallist):
     l=5
-    with open('difr.pkl', 'rb') as f:
+    with open(imgPath+'difr.pkl', 'rb') as f:
         clf = pickle.load(f)
     dstPath=imgPath+'dstfr_wind/'
     path = os.path.join(dstPath, 'bx_by')
