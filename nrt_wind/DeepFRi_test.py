@@ -1,32 +1,33 @@
-import time
+# import time
 import glob
 import os
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
-import pickle
-from datetime import datetime
-import pandas as pd
-from pathlib import Path
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+# import pickle
+# from datetime import datetime
+# import pandas as pd
+# from pathlib import Path
+# import matplotlib.pyplot as plt
 import tensorflow as tf
-from keras.utils.vis_utils import plot_model
+# from keras.utils.vis_utils import plot_model
 import keras
 from keras.models import Sequential
 from tensorflow.keras.utils import Sequence
 from tensorflow.keras.layers import Dropout
-from tensorflow.python.keras.models import Input, Model
+# from tensorflow.python.keras.models import Input, Model
 from keras.layers import Dense
 from keras.layers import Dropout, Flatten 
-from keras.layers import Dense,Softmax
-from keras.layers import Conv2D, MaxPooling2D, concatenate
-from sklearn.metrics import f1_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import precision_score
-from sklearn.metrics import accuracy_score
+from keras.layers import Dense  #,Softmax
+from keras.layers import Conv2D, MaxPooling2D #, concatenate
+# from sklearn.metrics import f1_score
+# from sklearn.metrics import recall_score
+# from sklearn.metrics import precision_score
+# from sklearn.metrics import accuracy_score
 
 
 def cnn_model_fit_60_30(imgPath,f):
+    breakpoint()
     input_shape = (54,162,1)
     def get_model1():
         model = Sequential() 
@@ -124,7 +125,7 @@ def cnn_model_fit_60_30(imgPath,f):
     lst = os.listdir(real_path) # your directory path
     print(len(lst))
     for iq in range(len(lst)-1):
-        real= glob.glob(real_path+'wind'+str(iq)+' '+'*.jpg')
+        real= glob.glob(real_path+'wind'+str(iq)+'_'+'*.jpg')
         realGen = realflankDataGenerator(real, batch_size=1)
         ynew = model.predict(realGen)
         file.writelines(str(real)+str(ynew)+'\n')

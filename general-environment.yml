@@ -1,0 +1,12 @@
+name: testenv_deepfri
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10.8
+  - jupyter
+  - pandas
+  - matplotlib
+  - pip
+  - pip:
+    - tensorflow 
+    - ai.cdas

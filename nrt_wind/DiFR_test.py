@@ -1,14 +1,14 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt 
-from general_code_and_catalogs.LASSOS_Py.data.wind import read_wind_mag
+# from general_code_and_catalogs.LASSOS_Py.data.wind import read_wind_mag
 from datetime import datetime
 import numpy as np
-import scipy
+# import scipy
 import pickle
 import pandas as pd
-from sklearn.cluster import KMeans
-import glob
+# from sklearn.cluster import KMeans
+# import glob
 from PIL import Image
 import os
 import shutil

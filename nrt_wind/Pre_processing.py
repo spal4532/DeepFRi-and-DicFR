@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
 import os
-from matplotlib import pyplot
+# from matplotlib import pyplot
 import matplotlib.pyplot as plt
-import pickle
+# import pickle
 import glob
-import shutil
+# import shutil
+from pathlib import Path
 from PIL import Image
 from datetime import datetime
 from nrt_wind.wind import read_wind_mag
@@ -79,7 +80,7 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
             
             count=0
 
-            outname = 'wind' + str(cin) +' '+str(t_sp)+'.jpg'
+            outname = 'wind' + str(cin) +'_'+t_sp.strftime('%Y-%m-%dT%H%M%S')+'.jpg'
             
             createPlot(fig,ax,bx,by,bz,0, imgPath + 'bx_by/' +outname)
             createPlot(fig,ax,bx,by,bz,1, imgPath + 'bx_bz/' +outname)
@@ -96,10 +97,11 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
             bzyFiles = glob.glob(bzyPath+'*.jpg')
 
 
-            bxyFiles
-            ix=0
+            # bxyFiles
+            # ix=0
             for bxyfile in bxyFiles:
-                filename = bxyFiles[ix].split('/')[-1]
+                # filename = bxyFiles[ix].split('/')[-1]
+                filename = Path(bxyfile).name
                 bxzfile = bxzPath + filename
                 bzyfile = bzyPath + filename
 
@@ -109,7 +111,7 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
                 im = (Image.fromarray(combine([bxyarr, bxzarr, bzyarr])))
                 path = imgPath+'concat/' + filename
                 im.save(path)
-                ix+=1 
+                # ix+=1 
             cin=cin+1
         tts=tts+npoint*0.04*l*60. #(the window is shifted with 4% of npoint=61 min)
         t_s=pd.to_datetime(tts,unit='s')

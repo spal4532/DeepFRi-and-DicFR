@@ -1,16 +1,16 @@
 import numpy as np
 import pandas as pd
 import os
-from matplotlib import pyplot
+# from matplotlib import pyplot
 import matplotlib.pyplot as plt
-import pickle
-import glob
-import shutil
-from PIL import Image
+# import pickle
+# import glob
+# import shutil
+# from PIL import Image
 from datetime import datetime
-from pandas.errors import EmptyDataError
+# from pandas.errors import EmptyDataError
 from datetime import datetime, timedelta
-from pandas.errors import EmptyDataError
+# from pandas.errors import EmptyDataError
 from nrt_wind.wind import read_wind_mag
 
 def prepare_pre_list(imgPath,inputfile,outputfile):
@@ -18,27 +18,32 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
     npoint=256
     l=int(np.round(24*60./npoint)) #Window duration 24 hours
     threshold_cons=1. 
-    df = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
+    # df = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
+    df = pd.read_csv(imgPath+inputfile, sep="_|T|'", header=None)
+    ncol = len(df.columns)
     v=[]
+    breakpoint()
     for i in range(len(df)):
-        if float(df[4][i][3:-2]) >=sig_th:
+        if float(df[ncol-1][i][3:-2]) >=sig_th:
             v.append(int('1'))
         else:
             v.append(int('0'))
     df['val']=v
 
-    time=df[3].str.split('.', n = 1, expand = True)[0]
+    breakpoint()
+    time=df[ncol-2].str.split('.', n = 1, expand = True)[0]
     # time
     df["time"]= time
     df['value_grp'] = (df['val'].diff(1) != 0).astype('int').cumsum()
     df_final=pd.DataFrame({'BeginDate' : df.groupby('value_grp')[2].first(), 'BeginTime' : df.groupby('value_grp')['time'].first(),
                 'EndDate' : df.groupby('value_grp')[2].last(),'EndTime' : df.groupby('value_grp')['time'].last(),
                 'Consecutive' : df.groupby('value_grp').size(),'Value' : df.groupby('value_grp')['val'].first()}).reset_index(drop=True)
-    df_final
+    # df_final
     c=0
     v=[]
     file= open(imgPath+'List1_prelim.txt', 'w')
     ii=0
+    breakpoint()
     while ii< (len(df_final.Value)):
         
         if df_final.Value[ii] ==1 and df_final.Consecutive[ii]>=threshold_cons:
