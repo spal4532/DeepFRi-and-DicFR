@@ -19,42 +19,59 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
     l=int(np.round(24*60./npoint)) #Window duration 24 hours
     threshold_cons=1. 
     # df = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
-    df = pd.read_csv(imgPath+inputfile, sep="_|T|'", header=None)
-    ncol = len(df.columns)
-    v=[]
-    breakpoint()
-    for i in range(len(df)):
-        if float(df[ncol-1][i][3:-2]) >=sig_th:
-            v.append(int('1'))
-        else:
-            v.append(int('0'))
-    df['val']=v
+    df = pd.read_csv(imgPath+inputfile, names=['fname','y'], header=None)
+    # df = pd.read_csv(imgPath+inputfile, sep="_|T|'", header=None)
+    # ncol = len(df.columns)
 
-    breakpoint()
-    time=df[ncol-2].str.split('.', n = 1, expand = True)[0]
+    df['val'] = 0
+    mask = df.y > sig_th
+    df.loc[mask, 'val'] = 1
+    # v=[]
+    # for i in range(len(df)):
+    #     if (df['y'][i] >= sig_th):
+    #         v.append(1)
+    #     else:
+    #         v.append(0)
+        # if float(df[ncol-1][i][3:-2]) >=sig_th:
+        #     v.append(int('1'))
+        # else:
+        #     v.append(int('0'))
+    # df['val']=v
+
+    time = df.fname.str.split('[T.]',expand=False).str.get(-2)
+    # time=df[ncol-2].str.split('.', n = 1, expand = True)[0]
     # time
-    df["time"]= time
+    df["time"]= time.str[0:2]+':'+time.str[2:4]+':'+time.str[4:6]
+    date = df.fname.str.split('[T_]',expand=False).str.get(-2)
+    df["date"] = date
     df['value_grp'] = (df['val'].diff(1) != 0).astype('int').cumsum()
-    df_final=pd.DataFrame({'BeginDate' : df.groupby('value_grp')[2].first(), 'BeginTime' : df.groupby('value_grp')['time'].first(),
-                'EndDate' : df.groupby('value_grp')[2].last(),'EndTime' : df.groupby('value_grp')['time'].last(),
-                'Consecutive' : df.groupby('value_grp').size(),'Value' : df.groupby('value_grp')['val'].first()}).reset_index(drop=True)
+    # df_final=pd.DataFrame({'BeginDate' : df.groupby('value_grp')[2].first(), 'BeginTime' : df.groupby('value_grp')['time'].first(),
+    #             'EndDate' : df.groupby('value_grp')[2].last(),'EndTime' : df.groupby('value_grp')['time'].last(),
+    #             'Consecutive' : df.groupby('value_grp').size(),'Value' : df.groupby('value_grp')['val'].first()}).reset_index(drop=True)
+    grouped = df.groupby('value_grp')
+    df_final = pd.DataFrame({'BeginDate': grouped.date.first(),
+                             'BeginTime': grouped.time.first(),
+                             'EndDate': grouped.date.last(),
+                             'EndTime': grouped.time.last(),
+                             'Consecutive': grouped.size(),
+                             'Value': grouped.val.first()}).reset_index(drop=True)
     # df_final
     c=0
-    v=[]
+    # v=[]
     file= open(imgPath+'List1_prelim.txt', 'w')
     ii=0
-    breakpoint()
     while ii< (len(df_final.Value)):
         
         if df_final.Value[ii] ==1 and df_final.Consecutive[ii]>=threshold_cons:
             
             end_e=(str(df_final.EndDate[ii])+' '+str(df_final.EndTime[ii]))
-            ttee=(datetime.strptime(str(end_e)[0:19], "%Y-%m-%d %H:%M:%S")-datetime(1970, 1, 1, 0, 0)).total_seconds()
+            ttee = (datetime.strptime(end_e, '%Y-%m-%d %H:%M:%S') - datetime(1970, 1, 1, 0, 0)).total_seconds()
+            # ttee=(datetime.strptime(str(end_e)[0:19], "%Y-%m-%d %H:%M:%S")-datetime(1970, 1, 1, 0, 0)).total_seconds()
             end_e_new=pd.to_datetime(ttee+np.round(l*npoint*60./3600)*3600.,unit='s')
             c=c+1
             file.writelines(str(df_final.BeginDate[ii])+' '+str(df_final.BeginTime[ii])+' '+str(end_e_new)+'\n')
         ii=ii+1
-    file. close()
+    file.close()
     print(c)
     c_fin=0
     if os.path.getsize(imgPath+'List1_prelim.txt') == 0:
@@ -79,27 +96,41 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
                 i=i+1  
         if len(df_extreme)==1:
             file.writelines(str(df_extreme[0][0])+' '+str(df_extreme[1][0])+' '+str(df_extreme[2][0])+' '+str(df_extreme[3][0])+'\n')
-    file. close()
+    file.close()
     return
 
 
 def boundary_finding(imgPath,inputfile,tstart,tend,outfile): 
     npoint=256
+    sig_th = 0.5
     l=int(np.round(24*60./npoint))
     shift=np.round(l*npoint*60*0.04/60)
-    dfr = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
-    time=dfr[3].str.split('.', n = 1, expand = True)[0] 
+    dfr = pd.read_csv(imgPath+inputfile, names=['fname', 'y'], header=None)
+    time = dfr.fname.str.split('[T.]',expand=False).str.get(-2)
+    dfr["time"]= time.str[0:2]+':'+time.str[2:4]+':'+time.str[4:6]
+    date = dfr.fname.str.split('[T_]',expand=False).str.get(-2)
+    dfr["date"] = date
 
-    dfr["time"]= time
-    vi=[]                                                                                                            #
-    for i in range(len(dfr)):                                   
-        if float(dfr[4][i][3:-2]) >=0.5:
-            vi.append(int('1'))
-        else:
-            vi.append(int('0'))
-    dfr[5]=vi
-    dfr_=dfr[(dfr[2]+' '+dfr['time'] >= tstart) & (dfr[2]+' '+dfr['time'] < tend)]
-    dfr=dfr_.reset_index(drop=True)
+    # dfr = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
+    # time=dfr[3].str.split('.', n = 1, expand = True)[0] 
+    # dfr["time"]= time
+    # vi=[]                                                                                                            #
+    # for i in range(len(dfr)):                                   
+    #     if float(dfr[4][i][3:-2]) >=0.5:
+    #         vi.append(int('1'))
+    #     else:
+    #         vi.append(int('0'))
+    # dfr[5]=vi
+
+    dfr['val'] = 0
+    mask = dfr.y > sig_th
+    dfr.loc[mask, 'val'] = 1
+
+    # dfr_=dfr[(dfr[2]+' '+dfr['time'] >= tstart) & (dfr[2]+' '+dfr['time'] < tend)]
+    # dfr=dfr_.reset_index(drop=True)
+
+    dfr_ = dfr[(dfr['date']+' '+dfr['time'] >= tstart) & (dfr['date']+' '+dfr['time'] < tend)]
+    dfr = dfr_.reset_index(drop=True)
 
     tstart=(datetime.strptime(str(tstart)[0:19], "%Y-%m-%d %H:%M:%S")-datetime(1970, 1, 1, 0, 0)).total_seconds()
     tend=(datetime.strptime(str(tend)[0:19], "%Y-%m-%d %H:%M:%S")-datetime(1970, 1, 1, 0, 0)).total_seconds()
@@ -107,14 +138,17 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
     tt=[]
     if dfr.empty!=True:
         for i in dfr.index:
-            tt.append(dfr[2][i]+' '+dfr['time'][i])
+            # tt.append(dfr[2][i]+' '+dfr['time'][i])
+            tt.append(dfr['date'][i]+' '+dfr['time'][i])
             
         ti=pd.to_datetime(tt)
         tend=pd.to_datetime((pd.to_datetime(ti[-1])-pd.to_datetime('1970-01-01 00:00:00')).total_seconds()+np.round(l*npoint*60./3600)*3600.,unit='s')
 
-        v=dfr[5]
+        # v=dfr[5]
+        v = dfr['val']
         plt.figure(figsize=(15, 5))
-        plt.bar(pd.to_datetime(tt),dfr[5],width=0.002)
+        # plt.bar(pd.to_datetime(tt),dfr[5],width=0.002)
+        plt.bar(pd.to_datetime(tt),dfr['val'],width=0.002)
         for i in  dfr.index:
             if v[i]==1:
                 
@@ -153,7 +187,8 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
             datetime_range(datetime.strptime(str(ti[0]), "%Y-%m-%d %H:%M:%S"), t_ei, 
             timedelta(minutes=shift))]
         
-        vn=[0 for k in range(len(dfr[0])+int(np.round(l*npoint*60/3600)))]
+        # vn=[0 for k in range(len(dfr[0])+int(np.round(l*npoint*60/3600)))]
+        vn=[0 for k in range(len(dfr)+int(np.round(l*npoint*60/3600)))]
         for gg in range(len(ti)):
             if v[gg]==1:
                 for j in range(gg,gg+int(np.round(l*npoint*60/3600))):

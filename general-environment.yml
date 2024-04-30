@@ -6,6 +6,7 @@ dependencies:
   - jupyter
   - pandas
   - matplotlib
+  - scikit-learn
   - pip
   - pip:
     - tensorflow 

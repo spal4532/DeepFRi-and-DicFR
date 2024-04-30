@@ -3,6 +3,7 @@ import glob
 import os
 from PIL import Image
 import numpy as np
+from pathlib import Path
 # import matplotlib.pyplot as plt
 # import pickle
 # from datetime import datetime
@@ -27,7 +28,6 @@ from keras.layers import Conv2D, MaxPooling2D #, concatenate
 
 
 def cnn_model_fit_60_30(imgPath,f):
-    breakpoint()
     input_shape = (54,162,1)
     def get_model1():
         model = Sequential() 
@@ -94,10 +94,10 @@ def cnn_model_fit_60_30(imgPath,f):
             y = np.empty(n)
             ix= 0
             for file in files:
-                
-                parts = file.split("/")
-                fname = parts[-1]
-                
+                # breakpoint()
+                # parts = file.split("/")
+                # fname = parts[-1]
+                fname = file.name
                 if fname[0:4]=='wind':
                     y[ix] = 0
                 else: 
@@ -116,19 +116,25 @@ def cnn_model_fit_60_30(imgPath,f):
             
             'Updates indexes after each epoch'
             self.indexes = np.arange(len(self.files))
-           
 
-    file= open(f, 'w')
-    real_path=imgPath+'concat/'
-
-    
-    lst = os.listdir(real_path) # your directory path
-    print(len(lst))
-    for iq in range(len(lst)-1):
-        real= glob.glob(real_path+'wind'+str(iq)+'_'+'*.jpg')
-        realGen = realflankDataGenerator(real, batch_size=1)
-        ynew = model.predict(realGen)
-        file.writelines(str(real)+str(ynew)+'\n')
+    real_path = Path(imgPath).joinpath('concat')           
+    with open(f, 'w') as file:
+        # file= open(f, 'w')
         
-    file. close()
+        # real_path=imgPath+'concat/'
+
+        breakpoint()
+        lst = os.listdir(real_path) # your directory path
+        print(len(lst))
+        # for iq in range(len(lst)-1):
+        for iq in range(len(lst)):
+            real = [x for x in real_path.glob('wind'+str(iq)+'_'+'*.jpg')]
+            # real= glob.glob(real_path+'wind'+str(iq)+'_'+'*.jpg')
+            realGen = realflankDataGenerator(real, batch_size=1)
+            ynew = model.predict(realGen)
+            file.write(real[0].as_posix()+','+str(ynew[0][0])+'\n')
+            # file.writelines(str([x.as_posix() for x in real])+str(ynew)+'\n')
+            # file.writelines(str(real)+str(ynew)+'\n')
+            
+        # file.close()
     return
