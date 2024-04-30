@@ -11,7 +11,7 @@ dependencies:
 - jupyterlab
 - jupyter-server-proxy
 - pandas
-- scikit-learn =1.2.2
+- scikit-learn=1.2.2
 - scipy
 - pip:
         - ai.cdas
