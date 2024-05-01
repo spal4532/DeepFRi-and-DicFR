@@ -1,30 +1,16 @@
-# import time
-import glob
 import os
 from PIL import Image
 import numpy as np
 from pathlib import Path
-# import matplotlib.pyplot as plt
-# import pickle
-# from datetime import datetime
-# import pandas as pd
-# from pathlib import Path
-# import matplotlib.pyplot as plt
 import tensorflow as tf
-# from keras.utils.vis_utils import plot_model
 import keras
 from keras.models import Sequential
 from tensorflow.keras.utils import Sequence
 from tensorflow.keras.layers import Dropout
-# from tensorflow.python.keras.models import Input, Model
 from keras.layers import Dense
 from keras.layers import Dropout, Flatten 
 from keras.layers import Dense  #,Softmax
 from keras.layers import Conv2D, MaxPooling2D #, concatenate
-# from sklearn.metrics import f1_score
-# from sklearn.metrics import recall_score
-# from sklearn.metrics import precision_score
-# from sklearn.metrics import accuracy_score
 
 
 def cnn_model_fit_60_30(imgPath,f):
@@ -35,16 +21,13 @@ def cnn_model_fit_60_30(imgPath,f):
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
         model.add(MaxPooling2D(pool_size=(4, 4)))
-        # model.add(Dropout(0.2))
         model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
         model.add(MaxPooling2D(pool_size=(4, 4)))
       
         model.add(Flatten())
-        # model.add(Dense(128, activation='relu'))
         model.add(Dense(64, activation='relu'))#32
         model.add(Dropout(0.2))
         model.add(Dense(1, activation='sigmoid'))
-        # model.add(Dense(2, activation='softmax'))
         return model
 
     config = tf.compat.v1.ConfigProto()
@@ -57,7 +40,6 @@ def cnn_model_fit_60_30(imgPath,f):
     savedModel = imgPath+"fr_1mres_60mdetrend_nfr_1mres_30mdetrend.h5"
     model = get_model1()
     model.load_weights(savedModel)
-    # model.summary()
 
     class realflankDataGenerator(Sequence):
 
@@ -94,9 +76,6 @@ def cnn_model_fit_60_30(imgPath,f):
             y = np.empty(n)
             ix= 0
             for file in files:
-                # breakpoint()
-                # parts = file.split("/")
-                # fname = parts[-1]
                 fname = file.name
                 if fname[0:4]=='wind':
                     y[ix] = 0
@@ -119,22 +98,11 @@ def cnn_model_fit_60_30(imgPath,f):
 
     real_path = Path(imgPath).joinpath('concat')           
     with open(f, 'w') as file:
-        # file= open(f, 'w')
-        
-        # real_path=imgPath+'concat/'
-
-        breakpoint()
         lst = os.listdir(real_path) # your directory path
         print(len(lst))
-        # for iq in range(len(lst)-1):
         for iq in range(len(lst)):
             real = [x for x in real_path.glob('wind'+str(iq)+'_'+'*.jpg')]
-            # real= glob.glob(real_path+'wind'+str(iq)+'_'+'*.jpg')
             realGen = realflankDataGenerator(real, batch_size=1)
             ynew = model.predict(realGen)
             file.write(real[0].as_posix()+','+str(ynew[0][0])+'\n')
-            # file.writelines(str([x.as_posix() for x in real])+str(ynew)+'\n')
-            # file.writelines(str(real)+str(ynew)+'\n')
-            
-        # file.close()
     return

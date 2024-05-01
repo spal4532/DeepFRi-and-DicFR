@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-# from matplotlib import pyplot
 import matplotlib.pyplot as plt
-# import pickle
 import glob
-# import shutil
 from pathlib import Path
 from PIL import Image
 from datetime import datetime
@@ -97,10 +94,7 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
             bzyFiles = glob.glob(bzyPath+'*.jpg')
 
 
-            # bxyFiles
-            # ix=0
             for bxyfile in bxyFiles:
-                # filename = bxyFiles[ix].split('/')[-1]
                 filename = Path(bxyfile).name
                 bxzfile = bxzPath + filename
                 bzyfile = bzyPath + filename
@@ -111,7 +105,6 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
                 im = (Image.fromarray(combine([bxyarr, bxzarr, bzyarr])))
                 path = imgPath+'concat/' + filename
                 im.save(path)
-                # ix+=1 
             cin=cin+1
         tts=tts+npoint*0.04*l*60. #(the window is shifted with 4% of npoint=61 min)
         t_s=pd.to_datetime(tts,unit='s')

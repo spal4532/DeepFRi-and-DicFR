@@ -1,4 +1,4 @@
-name: testenv_deepfri
+name: deepfri
 channels:
   - conda-forge
 dependencies:
