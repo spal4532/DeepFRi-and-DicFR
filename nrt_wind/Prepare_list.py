@@ -15,8 +15,8 @@ from nrt_wind.wind import read_wind_mag
 
 def prepare_pre_list(imgPath,inputfile,outputfile):
     sig_th=0.0004                 ##decision threshold obtained from model evaluation
-    npoint=int(np.round(24*60./5.))  ##Down-sampling (5-min average) to npoint
-    l=int(np.round(24*60./npoint)) #Window duration 24 hours
+    l=5.
+    npoint=int(np.round(24*60./l))  ##Down-sampling (5-min average) to npoint
     threshold_cons=1. 
     df = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
     v=[]
