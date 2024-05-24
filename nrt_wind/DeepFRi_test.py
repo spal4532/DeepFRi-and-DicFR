@@ -26,7 +26,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import accuracy_score
 
 
-def cnn_model_fit_60_30(imgPath,f):
+def cnn_model_fit_10_60(imgPath,f):
     input_shape = (54,162,1)
     def get_model1():
         model = Sequential() 
