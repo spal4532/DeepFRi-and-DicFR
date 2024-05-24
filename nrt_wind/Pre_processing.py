@@ -49,9 +49,9 @@ def create_hodogram_realFR_t_minus_24hr(st,et,imgPath):
     t_s=datetime.strptime(str(st)[0:19], "%Y-%m-%d %H:%M:%S")
     t_ef=datetime.strptime(str(et)[0:19], "%Y-%m-%d %H:%M:%S")
     
-    tts=(t_s-datetime(1970, 1, 1, 0, 0)).total_seconds()
-    npoint=int(np.round(24*60./5.)) #down-sampling (5 min average) to npoint
-    l=int(np.round(24*60./npoint)) #window size=8hrs
+    tts=(t_s-datetime(1970, 1, 1, 0, 0)).total_seconds() 
+    l=5 
+    npoint=int(np.round(24*60./l)) #down-sampling (5 min average) to npoint
     tts_p=tts-l*npoint*60.
     t_sp=pd.to_datetime(tts_p,unit='s')
     cin=0
