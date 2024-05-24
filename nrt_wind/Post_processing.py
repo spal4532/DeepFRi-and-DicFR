@@ -169,8 +169,8 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
             plt.plot(dts,vn[0:len(dts)],color='k',linestyle='--',label='$V_{cumsum}$')
             plt.axvline(start_boundary, color='k', linestyle='-', lw=2)
             plt.axvline(end_boundary, color='k', linestyle='-', lw=2)
-
-    return    start_boundary,end_boundary
+            outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
+            return    start_boundary,end_boundary
 
 def boundary_w_bth(imgPath,inputfile,start_boundary,end_boundary,outfile):
             
