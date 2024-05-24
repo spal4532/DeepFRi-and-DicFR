@@ -172,7 +172,7 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
             outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
             return    start_boundary,end_boundary
 
-def boundary_w_bth(imgPath,inputfile,start_boundary,end_boundary,outfile):
+def boundary_w_bth(start_boundary,end_boundary,outfile):
             
             df_mini=read_wind_mag(datetime.strptime(str(start_boundary), "%Y-%m-%d %H:%M:%S"),datetime.strptime(str(end_boundary), "%Y-%m-%d %H:%M:%S"))
             if df_mini.empty!=True:
