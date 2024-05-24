@@ -14,8 +14,8 @@ from pandas.errors import EmptyDataError
 from nrt_wind.wind import read_wind_mag
 
 def prepare_pre_list(imgPath,inputfile,outputfile):
-    sig_th=0.5
-    npoint=256
+    sig_th=0.0004                 ##decision threshold obtained from model evaluation
+    npoint=int(np.round(24*60./5.))  ##Down-sampling (5-min average) to npoint
     l=int(np.round(24*60./npoint)) #Window duration 24 hours
     threshold_cons=1. 
     df = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
@@ -79,8 +79,8 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
 
 
 def boundary_finding(imgPath,inputfile,tstart,tend,outfile): 
-    npoint=256
-    l=int(np.round(24*60./npoint))
+    npoint=int(np.round(24*60./5.))
+    l=int(np.round(24*60./npoint)) ##5 min
     shift=np.round(l*npoint*60*0.04/60)
     dfr = pd.read_csv(imgPath+inputfile, sep=" |'", header=None)
     time=dfr[3].str.split('.', n = 1, expand = True)[0] 
