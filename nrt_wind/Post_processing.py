@@ -77,7 +77,6 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
     file. close()
     return
 
-
 def boundary_finding(imgPath,inputfile,tstart,tend,outfile): 
     npoint=int(np.round(24*60./5.))
     l=int(np.round(24*60./npoint)) ##5 min
@@ -171,6 +170,10 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
             plt.axvline(start_boundary, color='k', linestyle='-', lw=2)
             plt.axvline(end_boundary, color='k', linestyle='-', lw=2)
 
+    return    start_boundary,end_boundary
+
+def boundary_w_bth(imgPath,inputfile,start_boundary,end_boundary,outfile):
+            
             df_mini=read_wind_mag(datetime.strptime(str(start_boundary), "%Y-%m-%d %H:%M:%S"),datetime.strptime(str(end_boundary), "%Y-%m-%d %H:%M:%S"))
             if df_mini.empty!=True:
                 df_mini=df_mini.dropna()
@@ -179,7 +182,7 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
                 bznmini=df_mini.Bz
                 btotmini=np.sqrt(bxnmini*bxnmini+bynmini*bynmini+bznmini*bznmini)
 
-            if np.mean(btotmini)>=5:#b_th = 5 nT:
+            if np.mean(btotmini)>=5.97:#b_th = 5.97 nT:
                 print(start_boundary,end_boundary)
                 outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
                 return  start_boundary,end_boundary
