@@ -4,11 +4,9 @@ import matplotlib.pyplot as plt
 from nrt_wind.wind import read_wind_mag
 from nrt_wind.wind import read_wind_mag_GSM
 from datetime import datetime
-import numpy as np
 import scipy
 import pickle
 import pandas as pd
-from sklearn.cluster import KMeans
 import glob
 from PIL import Image
 import os
