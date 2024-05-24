@@ -174,17 +174,18 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
 
 def boundary_w_bth(imgPath,inputfile,start_boundary,end_boundary,outfile):
             df = pd.read_csv(imgPath+inputfile, sep=" ", header=None)
-            start_boundary=df[0]+' '+df[1]
-            end_boundary=df[2]+' '+df[3]
-            df_mini=read_wind_mag(datetime.strptime(str(start_boundary), "%Y-%m-%d %H:%M:%S"),datetime.strptime(str(end_boundary), "%Y-%m-%d %H:%M:%S"))
-            if df_mini.empty!=True:
-                df_mini=df_mini.dropna()
-                bxnmini=df_mini.Bx
-                bynmini=df_mini.By
-                bznmini=df_mini.Bz
-                btotmini=np.sqrt(bxnmini*bxnmini+bynmini*bynmini+bznmini*bznmini)
+            for i in df.index:
+                start_boundary=df[0][i]+' '+df[1][i]
+                end_boundary=df[2][i]+' '+df[3][i]
+                df_mini=read_wind_mag(datetime.strptime(str(start_boundary), "%Y-%m-%d %H:%M:%S"),datetime.strptime(str(end_boundary), "%Y-%m-%d %H:%M:%S"))
+                if df_mini.empty!=True:
+                    df_mini=df_mini.dropna()
+                    bxnmini=df_mini.Bx
+                    bynmini=df_mini.By
+                    bznmini=df_mini.Bz
+                    btotmini=np.sqrt(bxnmini*bxnmini+bynmini*bynmini+bznmini*bznmini)
 
-            if np.mean(btotmini)>=5.97:#b_th = 5.97 nT:
-                print(start_boundary,end_boundary)
-                outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
-                return  start_boundary,end_boundary
+                if np.mean(btotmini)>=5.97:#b_th = 5.97 nT:
+                    print(start_boundary,end_boundary)
+                    outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
+                    return  start_boundary,end_boundary
