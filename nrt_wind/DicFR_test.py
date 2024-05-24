@@ -1,7 +1,8 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt 
-from general_code_and_catalogs.LASSOS_Py.data.wind import read_wind_mag
+from nrt_wind.wind import read_wind_mag
+from nrt_wind.wind import read_wind_mag_GSM
 from datetime import datetime
 import numpy as np
 import scipy
@@ -43,7 +44,7 @@ def create_hodogram(st,et,c,file):
     l=5
     st=datetime.strptime(str(st)[0:19], "%Y-%m-%d %H:%M:%S")
     et=datetime.strptime(str(et)[0:19], "%Y-%m-%d %H:%M:%S")
-    df= read_wind_mag( st,et)
+    df= read_wind_mag_GSM(st,et)
     if df.empty!=True:
         if df['Bx'].isna().sum()/len(df.Bx)<=0.1 and df['By'].isna().sum()/len(df.By)<=0.1 and df['Bz'].isna().sum()/len(df.Bz)<=0.1:
           
@@ -77,9 +78,9 @@ def create_hodogram(st,et,c,file):
             createPlot(fig,ax,bx,by,bz,2, imgPath + 'bz_by/' +outname)   
     return
 
-def DiFR(imgPath,list2,finallist):
+def DicFR(imgPath,list2,finallist):
     l=5
-    with open(imgPath+'difr.pkl', 'rb') as f:
+    with open(imgPath+'dicfr.pkl', 'rb') as f:
         clf = pickle.load(f)
     dstPath=imgPath+'dstfr_wind/'
     path = os.path.join(dstPath, 'bx_by')
@@ -119,7 +120,7 @@ def DiFR(imgPath,list2,finallist):
                     if pixel ==0:
                         c_bp += 1
             
-            df_mini=read_wind_mag(datetime.strptime(begin, "%Y-%m-%d %H:%M:%S"),datetime.strptime(end, "%Y-%m-%d %H:%M:%S"))
+            df_mini=read_wind_mag_GSM(datetime.strptime(begin, "%Y-%m-%d %H:%M:%S"),datetime.strptime(end, "%Y-%m-%d %H:%M:%S"))
             
             if df_mini.empty!=True:
                 
