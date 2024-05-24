@@ -80,7 +80,7 @@ def create_hodogram(st,et,c,file):
 
 def DicFR(imgPath,list2,finallist):
     l=5
-    with open(imgPath+'dicfr.pkl', 'rb') as f:
+    with open(imgPath+'dicfr_gsm.pkl', 'rb') as f:
         clf = pickle.load(f)
     dstPath=imgPath+'dstfr_wind/'
     path = os.path.join(dstPath, 'bx_by')
