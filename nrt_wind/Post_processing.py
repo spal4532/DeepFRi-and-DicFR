@@ -172,8 +172,10 @@ def boundary_finding(imgPath,inputfile,tstart,tend,outfile):
             outfile.writelines(str(start_boundary)+' '+str(end_boundary)+'\n')
             return    start_boundary,end_boundary
 
-def boundary_w_bth(start_boundary,end_boundary,outfile):
-            
+def boundary_w_bth(imgPath,inputfile,start_boundary,end_boundary,outfile):
+            df = pd.read_csv(imgPath+inputfile, sep=" ", header=None)
+            start_boundary=df[0]+' '+df[1]
+            end_boundary=df[2]+' '+df[3]
             df_mini=read_wind_mag(datetime.strptime(str(start_boundary), "%Y-%m-%d %H:%M:%S"),datetime.strptime(str(end_boundary), "%Y-%m-%d %H:%M:%S"))
             if df_mini.empty!=True:
                 df_mini=df_mini.dropna()
