@@ -13,6 +13,7 @@ dependencies:
 - pandas
 - scikit-learn 
 - scipy
+- pip
 - pip:
         - ai.cdas
         - tensorflow-macos
