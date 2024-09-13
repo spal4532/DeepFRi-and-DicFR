@@ -37,7 +37,7 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
     df_final
     c=0
     v=[]
-    file= open(imgPath+'List1_prime.txt', 'w')
+    file= open(imgPath+outputfile, 'w')
     ii=0
     while ii< (len(df_final.Value)):
         
@@ -52,16 +52,16 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
     file. close()
     print(c)
     c_fin=0
-    if os.path.getsize(imgPath+'List1_prime.txt') == 0:
+    if os.path.getsize(imgPath+outputfile) == 0:
         print('no FRs')
     
   
     else:
-        df_extreme = pd.read_csv(imgPath+'List1_prime.txt', sep=" ", header=None)
+        df_extreme = pd.read_csv(imgPath+outputfile, sep=" ", header=None)
         i=0
         file= open(imgPath+outputfile, 'w')
         if len(df_extreme)>1:
-            while i< (len(df_extreme[1])):
+            while i< (len(df_extreme[1])-1):
                 end_e=str(df_extreme[2][i])+' '+str(df_extreme[3][i])
                 ttee=(datetime.strptime(str(end_e)[0:19], "%Y-%m-%d %H:%M:%S")-datetime(1970, 1, 1, 0, 0)).total_seconds()
                 begin_e=str(df_extreme[0][i+1])+' '+str(df_extreme[1][i+1])
@@ -72,7 +72,7 @@ def prepare_pre_list(imgPath,inputfile,outputfile):
                 else:
                     c_fin=c_fin+1
                 i=i+1  
-        if len(df_extreme)==1:
+        if len(df_extreme)>=1:
             file.writelines(str(df_extreme[0][0])+' '+str(df_extreme[1][0])+' '+str(df_extreme[2][0])+' '+str(df_extreme[3][0])+'\n')
     file. close()
     return
