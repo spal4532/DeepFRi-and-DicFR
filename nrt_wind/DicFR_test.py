@@ -78,7 +78,7 @@ def create_hodogram(st,et,c,file):
 
 def DicFR(imgPath,list2,finallist):
     l=5
-    load_model = pickle.load(open('./nrt_wind/difr_gsm.pkl', 'rb')) 
+    load_model = pickle.load(open('./nrt_wind/dicfr_gsm.pkl', 'rb')) 
     # load_model  
 
     dstPath=imgPath+'dstfr_wind/'
