@@ -6,3 +6,6 @@ The python files inside the 'nrt_wind' folder contain functions for pre-processi
 The folder 'catalog' contains the 'List 1', 'List 2' and 'Final list' created during the model testing period during 2008-2014. The 'Final list' contains the auto-detected geoeffective flux ropes during the mentioned interval.
 For more details see the published article titled as Automatic Detection of Large-scale Flux Ropes and Their Geoeffectiveness with a Machine-learning Approach, The Astrophysical Journal, Volume 972, Number 1, DOI 10.3847/1538-4357/ad54c3.
 If you decide to use this in your work please cite the article as Citation: Sanchita Pal et al 2024 ApJ 972 94 and reach out the email:sanchita.pal1@outlook.com for possible collaboration.
+
+
+This pipeline can be directly used at https://colab.research.google.com/. Please use !git clone https://github.com/spal4532/DeepFRi-and-DicFR.git first and set a time window in main.ipynb and then run it to see the automatically identified geoeffective solar wind intervals.
